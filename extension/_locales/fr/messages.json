@@ -1,0 +1,11 @@
+{
+  "extName": { "message": "MapleV – Recherche de pièces Tesla" },
+  "extDescription": {
+    "message": "Trouvez les pièces Tesla Model 3 et Model Y par véhicule, type de pièce ou numéro OE, ou faites un clic droit sur un numéro."
+  },
+  "actionTitle": { "message": "Trouver une pièce Tesla" },
+  "menuLookup": { "message": "Chercher ce numéro de pièce Tesla sur MapleV" },
+  "openFull": { "message": "Ouvrir la recherche complète (coller une estimation)" },
+  "notAffiliated": { "message": "Non affiliée à Tesla, Inc." },
+  "offline": { "message": "Impossible de joindre maplev.ca pour le moment. Vérifiez votre connexion ou ouvrez la recherche dans un onglet :" }
+}

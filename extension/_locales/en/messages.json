@@ -1,0 +1,11 @@
+{
+  "extName": { "message": "MapleV Tesla Part Finder" },
+  "extDescription": {
+    "message": "Find Tesla Model 3 and Model Y collision parts by car, part type or OE number, or right-click a part number on any page."
+  },
+  "actionTitle": { "message": "Find a Tesla part" },
+  "menuLookup": { "message": "Look up Tesla part number on MapleV" },
+  "openFull": { "message": "Open the full lookup (paste a whole estimate)" },
+  "notAffiliated": { "message": "Not affiliated with Tesla, Inc." },
+  "offline": { "message": "Can't reach maplev.ca right now. Check your connection, or open the lookup in a tab:" }
+}
