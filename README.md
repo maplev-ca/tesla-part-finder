@@ -26,10 +26,13 @@ PWA · Canada
 
 ## Install
 
-- **Chrome, Edge, Opera, Brave:** the store links will be added here once the listings
-  are live. Until then: on this page choose **Code → Download ZIP** and unzip it, open
-  `chrome://extensions`, turn on Developer mode, choose **Load unpacked** and pick the
-  `extension` folder.
+- **Chrome, Edge, Brave, Opera:** install it from the Chrome Web Store —
+  [MapleV Tesla Part Finder](https://chromewebstore.google.com/detail/maplev-tesla-part-finder/ikafmfglgogmlgmhpggamimpboclbnop).
+  Edge and Brave install Chrome Web Store extensions too (Edge asks once to allow
+  extensions from other stores); Opera needs its Install Chrome Extensions add-on first.
+  To run this source instead: choose **Code → Download ZIP**,
+  unzip it, open `chrome://extensions`, turn on Developer mode, choose **Load unpacked** and
+  pick the `extension` folder.
 - **Firefox:** the store link will be added here once the listing is live.
 - **iPhone and Android:** phones cannot install browser extensions, so the same finder
   installs as an app instead. Open
