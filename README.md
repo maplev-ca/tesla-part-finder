@@ -1,8 +1,15 @@
-# MapleV Tesla Part Finder
+# Tesla Part Finder — free Tesla Model 3 and Model Y part number lookup (browser extension, PWA, embed)
 
-Find Tesla Model 3 and Model Y collision parts by car, part type or Tesla OE number:
-in a browser toolbar popup, from the right-click menu, as an app on your phone, or in a
-box on your own website. Free, no account.
+**Find any Tesla Model 3 or Model Y collision part** by car, part type, Tesla OE part
+number or Partslink number: in a browser toolbar popup (Chrome, Edge, Brave, Opera,
+Firefox), from the right-click menu on any part number, as an app on your phone, or in a
+box on your own website. Free, no account. Built by MapleV, a Tesla collision parts
+supplier in British Columbia, Canada; the data is the open
+[Tesla OE cross-reference dataset](https://github.com/maplev-ca/tesla-oe-cross-reference).
+
+Keywords: Tesla part finder · Tesla OE part number lookup · Tesla Model 3 parts ·
+Tesla Model Y parts · Partslink · collision parts · Chrome extension · Firefox add-on ·
+PWA · Canada
 
 ![The part finder in the browser toolbar](docs/screenshot.png)
 
