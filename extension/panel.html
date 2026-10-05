@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Tesla Part Finder · MapleV</title>
+<link rel="preload" href="fonts/inter-tight-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/inter-tight-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="panel.css">
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <a class="brand" id="brand" href="https://maplev.ca/" target="_blank" rel="noopener">
+      <img class="logo logo-light" src="img/logo-light.png" alt="MapleV" width="107" height="18">
+      <img class="logo logo-dark" src="img/logo-dark.png" alt="MapleV" width="107" height="18">
+    </a>
+    <a class="icon-btn" id="open" href="https://maplev.ca/oe-lookup/" target="_blank" rel="noopener">
+      <svg class="ic" viewBox="0 0 20 20" aria-hidden="true"><path d="M7 13 13 7M8 7h5v5"/></svg>
+    </a>
+  </header>
+
+  <div class="controls">
+    <div class="search">
+      <svg class="ic search-ic" viewBox="0 0 20 20" aria-hidden="true"><path d="M9 15a6 6 0 1 0 0-12 6 6 0 0 0 0 12zM13.5 13.5 17 17"/></svg>
+      <input id="q" type="search" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="search">
+      <kbd class="slash" aria-hidden="true">/</kbd>
+      <button class="clear" id="clear" type="button" hidden><span class="clear-dot"><svg class="ic" viewBox="0 0 20 20" aria-hidden="true"><path d="m7 7 6 6m0-6-6 6"/></svg></span></button>
+    </div>
+    <div class="filters">
+      <div class="pill" id="car-pill">
+        <label class="pill-main">
+          <svg class="ic" viewBox="0 0 20 20" aria-hidden="true"><path d="M3.5 13v-2.4l1.5-3.7A1.6 1.6 0 0 1 6.5 6h7a1.6 1.6 0 0 1 1.5.9l1.5 3.7V13M3.5 13h13M3.5 13v1.6h2.2V13m8.6 0v1.6h2.2V13M6.6 10.3h.01m6.8 0h.01"/></svg>
+          <span class="pill-text" id="car-text">All cars</span>
+          <svg class="ic caret" viewBox="0 0 20 20" aria-hidden="true"><path d="m6 8 4 4 4-4"/></svg>
+          <select id="car"></select>
+        </label>
+        <button class="pill-x" id="car-x" type="button" hidden><svg class="ic" viewBox="0 0 20 20" aria-hidden="true"><path d="m7 7 6 6m0-6-6 6"/></svg></button>
+      </div>
+      <div class="pill" id="cat-pill">
+        <label class="pill-main">
+          <svg class="ic" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 4h5v5H4zM11 4h5v5h-5zM4 11h5v5H4zM11 11h5v5h-5z"/></svg>
+          <span class="pill-text" id="cat-text">All parts</span>
+          <svg class="ic caret" viewBox="0 0 20 20" aria-hidden="true"><path d="m6 8 4 4 4-4"/></svg>
+          <select id="cat"></select>
+        </label>
+        <button class="pill-x" id="cat-x" type="button" hidden><svg class="ic" viewBox="0 0 20 20" aria-hidden="true"><path d="m7 7 6 6m0-6-6 6"/></svg></button>
+      </div>
+    </div>
+  </div>
+
+  <main class="content" id="content">
+    <p class="status" id="status" aria-live="polite"></p>
+    <div id="view"></div>
+  </main>
+
+  <footer class="foot" id="credit"></footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="panel.js"></script>
+</body>
+</html>

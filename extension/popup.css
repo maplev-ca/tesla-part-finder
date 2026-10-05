@@ -1,9 +1,0 @@
-/* The popup is a window onto /embed/oe-lookup — the frame carries its own styles. */
-html, body { margin: 0; padding: 0; width: 420px; background: #fff; color: #141414; font: 12.5px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
-#finder { display: block; width: 420px; height: 540px; border: 0; }
-.offline { margin: 0; padding: 16px; color: #5e5e5e; }
-.offline a { color: #c1152c; font-weight: 600; }
-.ft { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 12px 8px; border-top: 1px solid #eee; }
-.ft a { color: #c1152c; font-weight: 600; text-decoration: none; }
-.ft a:hover { text-decoration: underline; }
-.na { color: #8a8a8a; font-size: 11px; white-space: nowrap; }

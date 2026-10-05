@@ -3,7 +3,7 @@
   "name": "__MSG_extName__",
   "short_name": "Part Finder",
   "description": "__MSG_extDescription__",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "default_locale": "en",
   "homepage_url": "https://maplev.ca/oe-lookup/",
   "icons": {
@@ -13,7 +13,6 @@
     "128": "icons/icon-128.png"
   },
   "action": {
-    "default_popup": "popup.html",
     "default_title": "__MSG_actionTitle__",
     "default_icon": {
       "16": "icons/icon-16.png",
@@ -32,12 +31,22 @@
     "contextMenus"
   ],
   "commands": {
-    "_execute_action": {
+    "_execute_sidebar_action": {
       "suggested_key": {
         "default": "Alt+Shift+T"
-      },
-      "description": "__MSG_actionTitle__"
+      }
     }
+  },
+  "sidebar_action": {
+    "default_panel": "panel.html",
+    "default_title": "__MSG_actionTitle__",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    },
+    "open_at_install": false
   },
   "browser_specific_settings": {
     "gecko": {

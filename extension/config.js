@@ -1,24 +1,44 @@
-// Where the finder lives. scripts/pack-extension.mjs rewrites ORIGIN for the local
-// test build (wrangler on 127.0.0.1); the published build always points at maplev.ca.
-// SOURCE is the ?src= token the embed page accepts (src/lib/oeWidget.ts,
-// OE_WIDGET_SOURCE_TOKENS) so the website's traffic report tells the extension apart
-// from the website widget.
+// Where the finder's data and pages live. scripts/pack-extension.mjs rewrites ORIGIN for the
+// local test build (a static server on 127.0.0.1); the published build always points at maplev.ca.
+// SOURCE is the utm_source every link out of the extension carries, so the website's traffic
+// report tells the extension apart from the website widget (src/lib/oeWidget.ts,
+// OE_WIDGET_SOURCE_TOKENS lists the same token).
 export const ORIGIN = "https://maplev.ca";
 export const SOURCE = "chrome-extension";
 
-/** Language of the frame and links: French UI → the French pages, everything else English. */
+const UTM = `utm_source=${SOURCE}&utm_medium=extension&utm_campaign=oe-lookup-extension`;
+
+/** Language of the panel, the data and the links: French UI → French, everything else English. */
 export function uiLang() {
-  const lang = (typeof chrome !== "undefined" && chrome.i18n && chrome.i18n.getUILanguage && chrome.i18n.getUILanguage()) || navigator.language || "en";
+  const lang = (typeof chrome !== "undefined" && chrome.i18n && chrome.i18n.getUILanguage && chrome.i18n.getUILanguage()) || (typeof navigator !== "undefined" && navigator.language) || "en";
   return /^fr\b/i.test(lang) ? "fr" : "en";
 }
 
-export function embedUrl(lang) {
-  return `${ORIGIN}/embed/oe-lookup${lang === "fr" ? "-fr" : ""}?src=${SOURCE}`;
+/** A page on maplev.ca in `lang`, tagged as the extension. `path` is site-relative ("/parts/x/"). */
+export function siteUrl(lang, path, hash = "") {
+  const prefix = lang === "fr" && !path.startsWith("/fr/") ? "/fr" : "";
+  return `${ORIGIN}${prefix}${path}?${UTM}${hash}`;
 }
 
+/** A part's page: /parts/<slug>/ (French: /fr/parts/<slug>/). */
+export function partUrl(lang, slug) {
+  return siteUrl(lang, `/parts/${slug}/`);
+}
+
+/** The full lookup page (batch-capable: several numbers separated by commas). */
 export function lookupUrl(lang, query) {
-  const base = `${ORIGIN}${lang === "fr" ? "/fr" : ""}/oe-lookup/?utm_source=${SOURCE}&utm_medium=extension&utm_campaign=oe-lookup-extension`;
+  const base = `${ORIGIN}${lang === "fr" ? "/fr" : ""}/oe-lookup/?${UTM}`;
   return query ? `${base}#q=${encodeURIComponent(query)}` : base;
+}
+
+/** The part list the panel refreshes from — the rows /embed/oe-lookup carries, as JSON. */
+export function dataUrl(lang) {
+  return `${ORIGIN}/embed/data/oe-lookup-${lang === "fr" ? "fr" : "en"}.json`;
+}
+
+/** A photo from the list: rows carry site-relative paths ("/parts/thumbs/…jpg"). */
+export function imageUrl(path) {
+  return path ? `${ORIGIN}${path}` : "";
 }
 
 /**
@@ -28,7 +48,7 @@ export function lookupUrl(lang, query) {
  * because then ordinary words after a bare number were read as a revision: "1947151 and"
  * came out as 1947151-AN-D (caught 2026-10-02). Returns the numbers joined with commas,
  * which the lookup page's batch mode understands; an empty string when the selection holds
- * no number — the lookup page then just opens with the raw selection as the query.
+ * no number — the lookup then just runs on the raw selection.
  */
 export function extractPartNumbers(text) {
   const out = [];

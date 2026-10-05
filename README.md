@@ -1,28 +1,31 @@
 # Tesla Part Finder — free Tesla Model 3 and Model Y part number lookup (browser extension, PWA, embed)
 
-**Find any Tesla Model 3 or Model Y collision part** by car, part type, Tesla OE part
-number or Partslink number: in a browser toolbar popup (Chrome, Edge, Brave, Opera,
-Firefox), from the right-click menu on any part number, as an app on your phone, or in a
-box on your own website. Free, no account. Built by MapleV, a Tesla collision parts
-supplier in British Columbia, Canada; the data is the open
-[Tesla OE cross-reference dataset](https://github.com/maplev-ca/tesla-oe-cross-reference).
+**Find Tesla Model 3 and Model Y collision parts** by car, part type or Tesla OE part
+number: in a panel docked to the side of your browser (Chrome, Edge, Brave, Opera; the
+sidebar in Firefox), from the right-click menu on any part number, as an app on your phone,
+or in a box on your own website. Free, no account. Built by MapleV, a supplier of
+aftermarket collision parts for Tesla vehicles in British Columbia, Canada; the data is the
+open [Tesla OE cross-reference dataset](https://github.com/maplev-ca/tesla-oe-cross-reference),
+which also lists Partslink numbers.
 
 Keywords: Tesla part finder · Tesla OE part number lookup · Tesla Model 3 parts ·
 Tesla Model Y parts · Partslink · collision parts · Chrome extension · Firefox add-on ·
 PWA · Canada
 
-![The part finder in the browser toolbar](docs/screenshot.png)
+![The part finder in the browser's side panel, next to a repair estimate](docs/screenshot.png)
 
 ## What it does
 
-- Click the toolbar button (or press Alt+Shift+T), pick the car and the part type, or
-  type a Tesla OE number or a part name. Each result shows a photo, the model years it
-  fits and its Tesla OE numbers, with a link to the part's page on maplev.ca.
+- Click the toolbar button (or press Alt+Shift+T): the finder opens in the browser's side
+  panel. Pick the car and the part type, or type a Tesla OE number or a part name. Each
+  result shows a photo, the model years it fits and its Tesla OE numbers. Click a number to
+  copy it; click the part to open its page on maplev.ca.
 - Select a part number on any web page (a collision estimate, a listing, a forum post),
-  right-click and choose **Look up Tesla part number on MapleV**. Several numbers in one
-  selection are looked up together.
+  right-click and choose **Look up Tesla part number on MapleV**: the panel opens with the
+  answer. Several numbers in one selection, a whole estimate, are listed one by one.
 - Numbers work with or without dashes. The first seven digits list every version of a part.
-- English and French, following the browser's language.
+- Keyboard: `/` to search, `↑` `↓` to move, `Enter` to open, `Esc` to clear.
+- English and French, following the browser's language; light and dark, following the system.
 
 ## Install
 
@@ -61,11 +64,12 @@ More: [Free Tesla part finder](https://maplev.ca/guides/free-tesla-part-finder/)
 
 ## Privacy
 
-- The only permission is the right-click menu entry (`contextMenus`).
+- Two permissions, neither of which shows a warning: the right-click menu entry
+  (`contextMenus`) and the side panel (`sidePanel`). No access to the pages you visit.
 - The extension does not read or change the pages you visit, and it stores nothing.
-- The text you select is used only to open the lookup page, and only when you choose the
-  menu entry.
-- The popup loads the finder from maplev.ca like any web page.
+- The text you select is only looked up in the panel, and only when you choose the menu entry.
+- The panel downloads the public part list and the part photos from maplev.ca, without
+  cookies, so new parts show up without an extension update.
 
 Privacy policy: [maplev.ca/policies/privacy](https://maplev.ca/policies/privacy).
 
@@ -73,9 +77,10 @@ Privacy policy: [maplev.ca/policies/privacy](https://maplev.ca/policies/privacy)
 
 | Folder | Contents |
 | --- | --- |
-| `extension/` | The exact files in the Chrome Web Store package (also used for Edge and Opera) |
-| `firefox/manifest.json` | The manifest of the Firefox package; every other file is the same as in `extension/` |
-| `docs/` | Screenshots |
+| `extension/` | The extension's files as packaged for the Chrome Web Store (also used for Edge and Opera). `panel.js` is built from `source/panel/` together with the search code of maplev.ca's own part finder; `data/` is a snapshot of the part list (the same rows as the open dataset); `fonts/` is Inter Tight under the SIL Open Font License (`fonts/OFL.txt`) |
+| `firefox/manifest.json` | The manifest of the Firefox package (a sidebar instead of the side panel); every other file is the same as in `extension/` |
+| `source/panel/` | The readable source of the side panel (`panel.ts`) and of its decisions (`logic.ts`) |
+| `docs/` | Screenshot and store images |
 
 The parts data the finder shows is also published as a dataset under CC BY 4.0, in the
 `tesla-oe-cross-reference` repository.
@@ -89,5 +94,6 @@ cross-reference only; a matching number is a search key, not proof of fit.
 
 ## Licence
 
-© 2026 MapleV. All rights reserved; see [LICENSE](LICENSE). Questions:
+© 2026 MapleV. All rights reserved; see [LICENSE](LICENSE). The font in `extension/fonts/`
+is Inter Tight, under the SIL Open Font License 1.1 (`extension/fonts/OFL.txt`). Questions:
 [maplev.ca/contact](https://maplev.ca/contact/).

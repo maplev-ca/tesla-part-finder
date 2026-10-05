@@ -1,0 +1,285 @@
+/* MapleV Tesla Part Finder — side panel. What and why: browser-extension/panel/panel.ts.
+   Type is the website's own (Inter Tight, shipped inside the extension — OFL, see fonts/OFL.txt).
+   Red #c1152c (--accent 352 80% 42% on maplev.ca) is the identity colour: OE numbers, model
+   years, the picked filter — never decoration. Motion: feedback on press, nothing on what
+   repeats (typing, arrow keys), ease-out, ≤ 220 ms, transform/opacity only. */
+
+@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 400; font-display: swap; src: url("fonts/inter-tight-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 500; font-display: swap; src: url("fonts/inter-tight-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 600; font-display: swap; src: url("fonts/inter-tight-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 700; font-display: swap; src: url("fonts/inter-tight-latin-700-normal.woff2") format("woff2"); }
+
+:root {
+  color-scheme: light dark;
+  --font: "Inter Tight", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --press: 120ms;
+
+  --bg: #ffffff;
+  --bg-2: #f3f3f4;
+  --bg-3: #e9e9eb;
+  --hover: rgba(20, 20, 20, 0.045);
+  --press-bg: rgba(20, 20, 20, 0.085);
+  --text: #141414;
+  --text-2: #5b5b60;
+  --text-3: #8a8a8f;
+  --hair: rgba(20, 20, 20, 0.09);
+  --red: #c1152c;
+  --red-fill: #c1152c;
+  --red-fill-hover: #a81226;
+  --red-soft: #fbeaec;
+  --red-soft-2: #f5d3d8;
+  --ring: 0 0 0 3px rgba(193, 21, 44, 0.24);
+  --field-focus: inset 0 0 0 1px rgba(193, 21, 44, 0.55), 0 0 0 3px rgba(193, 21, 44, 0.12);
+  --toast: rgba(28, 28, 30, 0.9);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161618;
+    --bg-2: #232326;
+    --bg-3: #2d2d31;
+    --hover: rgba(255, 255, 255, 0.055);
+    --press-bg: rgba(255, 255, 255, 0.1);
+    --text: #f2f2f3;
+    --text-2: #a5a5aa;
+    --text-3: #76767c;
+    --hair: rgba(255, 255, 255, 0.09);
+    --red: #ff6070;
+    --red-fill: #d21d35;
+    --red-fill-hover: #e12a42;
+    --red-soft: rgba(255, 96, 112, 0.14);
+    --red-soft-2: rgba(255, 96, 112, 0.24);
+    --ring: 0 0 0 3px rgba(255, 96, 112, 0.32);
+    --field-focus: inset 0 0 0 1px rgba(255, 96, 112, 0.6), 0 0 0 3px rgba(255, 96, 112, 0.16);
+    --toast: rgba(60, 60, 64, 0.92);
+  }
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font: 400 14px/1.45 var(--font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+button, input, select { font: inherit; color: inherit; }
+button { -webkit-tap-highlight-color: transparent; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+p { margin: 0; }
+::selection { background: rgba(193, 21, 44, 0.18); }
+:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+
+.ic { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ── frame ──────────────────────────────────────────────────────────────── */
+.app { display: flex; flex-direction: column; height: 100vh; min-width: 0; }
+html.is-popup .app { width: 400px; height: 600px; }
+
+/* Just the logo: the browser's own panel header already names the extension above it
+   ("MapleV Tesla Part Finder"), so a second "Tesla Part Finder" here would only repeat it. */
+.top { display: flex; align-items: center; gap: 10px; padding: 14px 12px 12px 16px; }
+.brand { flex: none; display: inline-flex; border-radius: 4px; }
+.logo { display: block; height: 18px; width: auto; }
+.logo-dark { display: none; }
+.icon-btn {
+  flex: none; display: grid; place-items: center; width: 32px; height: 32px; margin-left: auto; border-radius: 9px;
+  color: var(--text-2); text-decoration: none;
+  transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out), transform var(--press) var(--ease-out);
+}
+.icon-btn:active { background: var(--press-bg); transform: scale(0.94); transition: transform var(--press) var(--ease-out), background-color 0s; }
+
+/* ── search + filters ───────────────────────────────────────────────────── */
+.controls { display: grid; gap: 10px; padding: 0 16px 12px; }
+
+.search {
+  position: relative; display: flex; align-items: center; height: 44px; border-radius: 12px; background: var(--bg-2);
+  transition: background-color 150ms var(--ease-out), box-shadow 150ms var(--ease-out);
+}
+.search:focus-within { background: var(--bg); box-shadow: var(--field-focus); }
+.search-ic { position: absolute; left: 13px; color: var(--text-3); pointer-events: none; }
+#q {
+  flex: 1; min-width: 0; height: 100%; padding: 0 42px 0 41px; border: 0; outline: 0; background: transparent;
+  font-size: 15px; font-weight: 500; letter-spacing: -0.005em;
+}
+#q::placeholder { color: var(--text-3); font-weight: 400; opacity: 1; }
+#q::-webkit-search-cancel-button, #q::-webkit-search-decoration { -webkit-appearance: none; appearance: none; }
+.slash {
+  position: absolute; right: 12px; display: grid; place-items: center; min-width: 20px; height: 20px; padding: 0 6px;
+  border: 1px solid var(--hair); border-radius: 5px; color: var(--text-3); font: 500 11.5px/1 var(--font); pointer-events: none;
+}
+.search:focus-within .slash, .search:has(#q:not(:placeholder-shown)) .slash { display: none; }
+.clear {
+  position: absolute; right: 6px; display: grid; place-items: center; width: 32px; height: 32px; padding: 0;
+  border: 0; border-radius: 50%; background: transparent; cursor: pointer;
+}
+.clear-dot { display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: var(--text-3); color: var(--bg); transition: transform var(--press) var(--ease-out); }
+.clear-dot .ic { width: 14px; height: 14px; stroke-width: 2; }
+.clear:active .clear-dot { transform: scale(0.88); }
+.clear[hidden] { display: none; }
+
+/* One row, always: picking a long part type shortens its label instead of pushing the list down. */
+.filters { display: flex; gap: 8px; min-width: 0; }
+.pill {
+  display: inline-flex; flex: 0 1 auto; align-items: center; max-width: 100%; min-width: 0; height: 32px; border-radius: 999px;
+  background: var(--bg-2); color: var(--text);
+  transition: background-color 150ms var(--ease-out), color 150ms var(--ease-out), transform var(--press) var(--ease-out);
+}
+#car-pill { flex-shrink: 0; } /* car names are short; the part type is the one that gives way */
+.pill-main { position: relative; display: inline-flex; align-items: center; gap: 6px; min-width: 0; height: 100%; padding: 0 10px 0 11px; border-radius: inherit; cursor: pointer; }
+.pill-main select { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; border: 0; -webkit-appearance: none; appearance: none; font-size: 14px; }
+.pill-main:has(select:focus-visible) { box-shadow: var(--ring); }
+.pill-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 500; letter-spacing: -0.005em; }
+.pill .ic { width: 16px; height: 16px; color: var(--text-2); }
+.pill .caret { width: 14px; height: 14px; margin-left: -2px; color: var(--text-3); }
+.pill:active:not(:has(.pill-x:active)) { transform: scale(0.97); }
+.pill.is-on { background: var(--red-soft); color: var(--red); }
+.pill.is-on .ic { color: var(--red); }
+.pill.is-on .caret { display: none; }
+.pill.is-on .pill-main { padding-right: 4px; }
+.pill-x { display: grid; place-items: center; width: 26px; height: 26px; margin-right: 3px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: inherit; cursor: pointer; transition: background-color 150ms var(--ease-out); }
+.pill-x .ic { width: 14px; height: 14px; stroke-width: 1.9; }
+.pill-x:active { background: var(--red-soft-2); transition-duration: 0s; }
+.pill-x[hidden] { display: none; }
+
+/* ── content ────────────────────────────────────────────────────────────── */
+.content { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 8px 20px; scrollbar-width: thin; scrollbar-color: var(--hair) transparent; }
+/* Scroll edge: content passing under the controls fades out instead of meeting a hard line. */
+html.is-scrolled .content { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 16px); mask-image: linear-gradient(to bottom, transparent 0, #000 16px); }
+
+.status { min-height: 17px; margin: 2px 8px 8px; color: var(--text-3); font-size: 12px; font-weight: 500; letter-spacing: 0.005em; font-variant-numeric: tabular-nums; }
+.status:empty { margin-bottom: 0; }
+.eyebrow { margin: 6px 8px 4px; color: var(--text-3); font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
+
+/* Browse by part */
+.shelves { margin: 0; padding: 0; list-style: none; }
+.shelf {
+  display: flex; align-items: center; gap: 12px; width: 100%; min-height: 52px; padding: 6px 8px;
+  border: 0; border-radius: 12px; background: transparent; text-align: left; cursor: pointer;
+  transition: background-color 150ms var(--ease-out), transform var(--press) var(--ease-out);
+}
+.shelf:active { background: var(--press-bg); transform: scale(0.985); transition: transform var(--press) var(--ease-out), background-color 0s; }
+.shelf-pic { flex: none; width: 40px; height: 40px; overflow: hidden; border-radius: 10px; background: var(--bg-2); }
+.shelf-label { flex: 1; min-width: 0; font-size: 14px; font-weight: 500; letter-spacing: -0.005em; }
+.shelf-count { color: var(--text-3); font-size: 13px; font-variant-numeric: tabular-nums; }
+.shelf-go { width: 16px; height: 16px; color: var(--text-3); transition: transform 150ms var(--ease-out), color 150ms var(--ease-out); }
+
+.tips { display: grid; gap: 10px; margin: 16px 8px 4px; padding: 12px 14px; border-radius: 12px; background: var(--bg-2); }
+.tip { display: flex; gap: 10px; color: var(--text-2); font-size: 12.5px; line-height: 1.45; }
+.tip-ic { width: 16px; height: 16px; margin-top: 1px; color: var(--red); }
+
+/* Results */
+.rows { display: grid; gap: 2px; }
+/* No transition on the highlight: ↑ ↓ are pressed dozens of times — it must land on the frame. */
+.row { position: relative; display: flex; align-items: flex-start; gap: 12px; padding: 10px 8px; border-radius: 12px; }
+.row.is-active { background: var(--hover); }
+.row:active:not(:has(.chip:active)) { background: var(--press-bg); transition-duration: 0s; }
+.row-link { position: absolute; inset: 0; z-index: 0; border-radius: inherit; }
+.row-link:focus-visible { outline: 2px solid var(--red); outline-offset: -2px; }
+.row-pic { position: relative; flex: none; width: 56px; height: 56px; overflow: hidden; border-radius: 10px; background: var(--bg-2); pointer-events: none; }
+.thumb { display: block; width: 100%; height: 100%; object-fit: cover; }
+.thumb.is-broken { visibility: hidden; }
+.row-body { flex: 1; min-width: 0; pointer-events: none; }
+.row-name {
+  margin: 1px 0 2px; font-size: 14px; font-weight: 600; line-height: 1.3; letter-spacing: -0.01em;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+/* Cars as a wrapping row; the red years separate them, so no dots are left hanging at a line end. */
+.row-fits { display: flex; flex-wrap: wrap; column-gap: 10px; color: var(--text-2); font-size: 12.5px; line-height: 1.45; }
+.fit { white-space: nowrap; }
+.years { color: var(--red); font-weight: 500; font-variant-numeric: tabular-nums; }
+.row-go { width: 16px; height: 16px; margin-top: 2px; color: var(--text-3); pointer-events: none; }
+.row.is-active .row-go { color: var(--red); }
+
+.chips { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 4px; width: fit-content; max-width: 100%; margin-top: 6px; pointer-events: auto; }
+.chip {
+  height: 22px; padding: 0 7px; border: 0; border-radius: 6px; background: var(--red-soft); color: var(--red);
+  font: 600 11.5px/22px var(--font); letter-spacing: 0.02em; font-variant-numeric: tabular-nums; cursor: copy;
+  transition: background-color 150ms var(--ease-out), transform var(--press) var(--ease-out);
+}
+.chip:active { transform: scale(0.95); }
+.chip.is-hit { background: var(--red-fill); color: #fff; }
+.chip.is-extra { display: none; }
+.chips.is-open .chip.is-extra { display: inline-block; }
+.chip-more { background: var(--bg-2); color: var(--text-2); cursor: pointer; }
+.chip.is-copied { animation: copied 600ms var(--ease-out); }
+@keyframes copied { from { box-shadow: 0 0 0 0 rgba(193, 21, 44, 0.45); } to { box-shadow: 0 0 0 6px rgba(193, 21, 44, 0); } }
+
+/* Several numbers pasted */
+.group { margin: 2px 0 10px; }
+.group-head { display: flex; align-items: baseline; gap: 8px; padding: 6px 8px 2px; }
+.token { color: var(--red); font-size: 13px; font-weight: 600; letter-spacing: 0.02em; font-variant-numeric: tabular-nums; }
+.group-count { color: var(--text-3); font-size: 12px; }
+.group.is-miss .token { color: var(--text-2); }
+
+/* Buttons and links */
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 6px; height: 40px; margin: 14px 8px 4px; padding: 0 16px;
+  border-radius: 12px; background: var(--red-fill); color: #fff; font-size: 14px; font-weight: 600; letter-spacing: -0.005em; text-decoration: none;
+  transition: background-color 150ms var(--ease-out), transform var(--press) var(--ease-out);
+}
+.btn:active { transform: scale(0.97); }
+.btn-quiet { display: block; margin: 6px auto 0; padding: 8px 12px; border: 0; border-radius: 10px; background: transparent; color: var(--text-2); font-size: 13px; font-weight: 500; cursor: pointer; transition: background-color 150ms var(--ease-out); }
+.btn-quiet:active { background: var(--press-bg); transition-duration: 0s; }
+.site-link { display: inline-flex; align-items: center; gap: 4px; margin: 12px 8px 0; color: var(--red); font-size: 13px; font-weight: 600; text-decoration: none; }
+.site-link .ic { width: 14px; height: 14px; }
+.caveat { margin: 12px 8px 0; color: var(--text-3); font-size: 11.5px; line-height: 1.45; }
+
+/* Nothing found */
+.empty { display: grid; justify-items: center; padding: 40px 8px 8px; text-align: center; }
+.empty-badge { display: grid; place-items: center; width: 52px; height: 52px; margin-bottom: 12px; border-radius: 50%; background: var(--bg-2); color: var(--text-3); }
+.empty-badge .ic { width: 24px; height: 24px; }
+.empty-title { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+.empty .btn { width: 100%; max-width: 320px; margin-top: 16px; }
+
+.foot { flex: none; padding: 8px 16px 12px; color: var(--text-3); font-size: 11.5px; letter-spacing: 0.005em; text-align: center; }
+
+/* Copied — confirms the action, enters from where it leaves (below), out faster than in. */
+.toast {
+  position: fixed; left: 50%; bottom: 40px; max-width: calc(100% - 32px); padding: 9px 14px; border-radius: 999px;
+  background: var(--toast); color: #fff; font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18), 0 1px 2px rgba(0, 0, 0, 0.12);
+  -webkit-backdrop-filter: blur(12px) saturate(160%); backdrop-filter: blur(12px) saturate(160%);
+  opacity: 0; transform: translate(-50%, 8px) scale(0.98); pointer-events: none;
+  transition: opacity 140ms var(--ease-out), transform 140ms var(--ease-out);
+}
+.toast.is-on { opacity: 1; transform: translate(-50%, 0) scale(1); transition-duration: 220ms; }
+
+/* Hover only where there is a pointer that hovers. */
+@media (hover: hover) and (pointer: fine) {
+  .icon-btn:hover { background: var(--hover); color: var(--text); }
+  .pill:hover { background: var(--bg-3); }
+  .pill.is-on:hover { background: var(--red-soft-2); }
+  .pill-x:hover { background: var(--red-soft-2); }
+  .shelf:hover { background: var(--hover); }
+  .shelf:hover .shelf-go { color: var(--text-2); transform: translateX(2px); }
+  .chip:hover { background: var(--red-soft-2); }
+  .chip.is-hit:hover { background: var(--red-fill-hover); }
+  .chip-more:hover { background: var(--bg-3); }
+  .btn:hover { background: var(--red-fill-hover); }
+  .btn-quiet:hover { background: var(--hover); color: var(--text); }
+  .site-link:hover { text-decoration: underline; text-underline-offset: 2px; }
+}
+
+@media (prefers-color-scheme: dark) {
+  .logo-light { display: none; }
+  .logo-dark { display: block; }
+  .chip.is-copied { animation-name: copied-dark; }
+  @keyframes copied-dark { from { box-shadow: 0 0 0 0 rgba(255, 96, 112, 0.5); } to { box-shadow: 0 0 0 6px rgba(255, 96, 112, 0); } }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; }
+  .icon-btn:active, .pill:active, .shelf:active, .chip:active, .btn:active, .clear:active .clear-dot { transform: none !important; }
+  .shelf:hover .shelf-go { transform: none !important; }
+  .toast, .toast.is-on { transform: translate(-50%, 0); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .toast { -webkit-backdrop-filter: none; backdrop-filter: none; background: #1c1c1e; }
+}
+@media (prefers-contrast: more) {
+  :root { --hair: rgba(0, 0, 0, 0.35); --text-2: #333336; --text-3: #4d4d52; }
+  .chip, .pill, .search { box-shadow: inset 0 0 0 1px currentColor; }
+}
